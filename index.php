@@ -1,49 +1,53 @@
 <?php
 session_start();
-if(isset($_GET["page"]) && $_GET["page"]=="addMember")
-    $_SESSION["page"]="addMember";
-else
-    $_SESSION["page"]="listing";
-
-require_once 'element/header.php';
+require_once("core/Database.php");
+require_once("model/Member.php");
 require_once 'database/db-config.php';
 
 
+if(isset($_GET["page"]) && $_GET["page"]=="add"){
+    $_SESSION["page"]="add";
+} 
+else{
+    $_SESSION["page"]="listing";
+} 
+if(isset($_GET["modify"]) && !empty($_GET["modify"])){
+    $_SESSION["modify"]=$_GET["modify"];
+    $_SESSION["page"]="listing";
+}else{
+    $_SESSION["modify"]="";
+} 
 
-$order="";
 if (isset($_GET["order"]) && !is_null($_GET["order"])){
     $order="ORDER BY user_".$_GET["order"];
 }
-
-
-try{
-    $PDO=new PDO($DB_DNS,$DB_USER,$DB_PASS,$option);
-}catch (PDOException $e){
-    echo "error:".$e->errorMessage();
+else{
+    $order="";
 }
 
-$sql='SELECT * FROM user '.$order;
+if(isset($_GET["error"]) && !empty($_GET["error"])){
+    $showError="";
+    $error=$_GET["error"];
+}else{
+    $showError="hidden";
+}
 
-$request= $PDO->prepare($sql);
-$request->execute();
+ob_start();
+require ("./view/@shared/header.php");
+$header = ob_get_clean();
+$PDO = new Member();
 
+if($_SESSION["page"]=="add"){
+    ob_start();
+    require "view/loan/addNew.php";
+    $content = ob_get_clean();
+}
+else{
+    $data_User = $PDO->getAllUserOrder($order);
+    ob_start();
+    require "view/loan/listing.php";
+    $content = ob_get_clean();
+}
 
-$data_User=$request->fetchall(PDO::FETCH_ASSOC);
-?>
-   
-   
-    <div class="header">
-        <p>mon bloc de list dynamique</p>
-        <p>
-            <button><a href="index.php?page=addMember">Add member</a></button>
-            <button><a href="index.php?page=listing">list</a></button>
-        </p>
-          </div>
-
-<?php
-    if($_SESSION["page"]=="addMember")
-        require "element/layout/addMember.php";
-    else
-        require "element/layout/listing.php";
-    require_once "element/footer.html";
+require("./view/layout.php"); 
 ?>
