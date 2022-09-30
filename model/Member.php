@@ -9,13 +9,20 @@ class Member extends Database{
     private $user_tel;
     private $user_mail;
     private $user_password;
+    private $limit = 5;
 
-
-    public function getAllUserOrder($order){
+    public function getAllUserOrder(string $order=" "){
         $sql='SELECT * FROM user '.$order;
         $request= $this->PDO->prepare($sql);
         $request->execute();
-        return $request->fetchall(PDO::FETCH_ASSOC);
+        return $request->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getUsers(string $order=" ",int $page=1){
+        $offset = ($page-1)*5;
+        $sql = 'SELECT * FROM user '.$order.' limit '.$this->limit.' OFFSET '.$offset;
+        $request= $this->PDO->prepare($sql);
+        $request->execute();
+        return $request->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function registerUser($fName,$lName,$pseudo,$age,$tel,$mail,$pass):bool{
@@ -31,6 +38,7 @@ class Member extends Database{
         }
         return $booleen;
     }
+
     public function updateUser($id,$fName,$lName,$pseudo,$age,$tel){
         $table= 'user';
         $set= "user_firstname =' ".$fName."' , user_lastname = '".$lName."' , user_pseudo = '".$pseudo."' , user_age = '".$age."' , user_tel = '".$tel."'" ;
@@ -46,6 +54,7 @@ class Member extends Database{
         }
         return $booleen;
     }
+    
     public function deleteUser($id){
         $table= 'user';
         $sql= "DELETE FROM ".$table." WHERE id_user= ".$id ;
@@ -59,6 +68,5 @@ class Member extends Database{
         }
         return $booleen;
     }
-
 }
 ?>

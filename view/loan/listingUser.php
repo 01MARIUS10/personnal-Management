@@ -4,11 +4,11 @@
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col"><a href="index.php" class="text-light"></a></th>
-                        <th scope="col"><a href="index.php?order=firstname" class="text-light">nom</a>  </th>
-                        <th scope="col"><a href="index.php?order=lastname" class="text-light">prenom</a> </th>
-                        <th scope="col"><a href="index.php?order=pseudo" class="text-light">pseudo</a></th>
-                        <th scope="col"><a href="index.php?order=age" class="text-light">age</a></th>
-                        <th scope="col"><a href="index.php?order=tel" class="text-light">tel</a></th>
+                        <th scope="col"><a href=<?= $uri->routeOrder("firstname")?> class="text-light">nom</a>  </th>
+                        <th scope="col"><a href=<?=$uri->routeOrder("lastname")?> class="text-light">prenom</a> </th>
+                        <th scope="col"><a href=<?=$uri->routeOrder("pseudo")?> class="text-light">pseudo</a></th>
+                        <th scope="col"><a href=<?=$uri->routeOrder("age")?> class="text-light">age</a></th>
+                        <th scope="col"><a href=<?=$uri->routeOrder("tel")?> class="text-light">tel</a></th>
                         <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
@@ -43,7 +43,7 @@
                         <div class="alert alert-danger" <?= $showError?> > <?= $error?></div>
                     </tr>
                     <?php else :?>
-                    <?php $modifylink="index.php?modify=".$user["id_user"];?>
+                    <?php $modifylink=$uri->routeModify($user["id_user"]) ;?>
                     <?php $deletelink="controller/deleteUser.php?delete=".$user["id_user"] ;?>
                     <tr>
                         <th scope="row"><?=$user["id_user"]?></th>
@@ -65,7 +65,7 @@
             </table>
         </div>
         <div class="d-flex justify-content-center">
-            <button>page prevedent</button>
-            <button>page suivant</button>
+            <button><a href=<?=$uri->precPage()?> class="text-dark">page prevedent</a> </button>
+            <button><a href=<?=$uri->nextPage()?> class="text-dark">page suivant</a> </button>
         </div>
 

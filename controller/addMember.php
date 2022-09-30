@@ -15,7 +15,7 @@ $bool= $PDO->registerUser($nom,$prenom,$pseudo,$age,$tel,$mail,$passwd);
 echo "|".$bool."|<br>";
 
 if($bool==!""){
-    header('location: ../index.php');
+    header('location: ..'.$uri->route);
 }
 header('../index.php?page=addMember&&error=desole , une erreur s\' est produite');
 

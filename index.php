@@ -1,53 +1,29 @@
 <?php
 session_start();
 require_once("core/Database.php");
+require_once "core/RouterLink.php";
 require_once("model/Member.php");
 require_once 'database/db-config.php';
 
-
-if(isset($_GET["page"]) && $_GET["page"]=="add"){
-    $_SESSION["page"]="add";
-} 
-else{
-    $_SESSION["page"]="listing";
-} 
-if(isset($_GET["modify"]) && !empty($_GET["modify"])){
-    $_SESSION["modify"]=$_GET["modify"];
-    $_SESSION["page"]="listing";
-}else{
-    $_SESSION["modify"]="";
-} 
-
-if (isset($_GET["order"]) && !is_null($_GET["order"])){
-    $order="ORDER BY user_".$_GET["order"];
-}
-else{
-    $order="";
-}
-
-if(isset($_GET["error"]) && !empty($_GET["error"])){
-    $showError="";
-    $error=$_GET["error"];
-}else{
-    $showError="hidden";
-}
+require_once 'controller/router.php';
 
 ob_start();
 require ("./view/@shared/header.php");
 $header = ob_get_clean();
-$PDO = new Member();
 
-if($_SESSION["page"]=="add"){
+$PDO = new Member();
+$uri = new RouterLink();
+
+if(in_array($_SESSION["page"],$uri->allRoute)){
+    if($_SESSION["page"]=="listing"){
+        $data_User = $PDO->getUsers($order,$page);
+    }
     ob_start();
-    require "view/loan/addNew.php";
+    require "view/loan/".$_SESSION["page"]."User.php";
     $content = ob_get_clean();
+    require("./view/layout.php"); 
 }
 else{
-    $data_User = $PDO->getAllUserOrder($order);
-    ob_start();
-    require "view/loan/listing.php";
-    $content = ob_get_clean();
+    require_once("view/loan/errorUser.php");
 }
-
-require("./view/layout.php"); 
 ?>

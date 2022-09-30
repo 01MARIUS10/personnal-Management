@@ -1,10 +1,11 @@
 <?php 
 print_r($_POST);
 print_r($_GET);
+require_once("../core/RouterLink.php");
 require_once("../core/Database.php");
 require_once("../model/Member.php");
 $id=$_GET["modify"];
-echo "eto";
+$uri = new RouterLink();
 
 $nom=$_POST["name"];
 $prenom=$_POST["lastname"];
@@ -20,8 +21,8 @@ print_r($PDO);
 $bool= $PDO->updateUser($id,$nom,$prenom,$pseudo,$age,$tel);
 
 if($bool){
-    header('location: ../index.php');
+    header('location: ..'.$uri->route);
 }
 else{
-    header('../index.php?page=addMember&&error=desole , une erreur s\' est produite');
+    header('../index.php?page=UpdateMember&&error=desole , une erreur s\' est produite');
 }
