@@ -9,7 +9,6 @@ if(isset($_GET["page"]) && in_array($_GET["page"],Page::$allRoute)){
 else{
     $_SESSION["page"]="listing";
 }
-var_dump(gettype($_GET["page"])) ;
 
 if (isset($_GET["page"]) && !empty($_GET["page"])){
     $page=(int)$_GET["page"];
